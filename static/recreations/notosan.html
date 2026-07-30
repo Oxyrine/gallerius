@@ -77,6 +77,11 @@
     opacity: 0;
     clip-path: inset(0 0 100% 0);
     transition: opacity 0.5s ease-out, clip-path 0.5s ease-out;
+    will-change: opacity, clip-path;
+  }
+
+  .scene.dormant * {
+    animation-play-state: paused !important;
   }
 
   .scene.active {
@@ -160,6 +165,7 @@
     z-index: 6;
     display: flex;
     align-items: flex-end;
+    justify-content: space-between;
     overflow: hidden;
   }
 
@@ -239,12 +245,11 @@
     height: 90%;
     background: repeating-linear-gradient(
       100deg,
-      rgba(255,226,180,0.14) 0px,
-      rgba(255,226,180,0.14) 14px,
+      rgba(255,226,180,0.1) 0px,
+      rgba(255,226,180,0.1) 14px,
       transparent 14px,
       transparent 60px
     );
-    mix-blend-mode: screen;
   }
 
   .rock {
@@ -261,7 +266,6 @@
     height: 78%;
     background: linear-gradient(180deg, rgba(220,235,255,0.9), rgba(150,190,230,0.5));
     border-radius: 0 0 40% 40%;
-    filter: blur(0.5px);
     background-size: 100% 200%;
     animation: fall 1.4s linear infinite;
   }
@@ -282,10 +286,10 @@
 
   .glow-plant {
     position: absolute;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    filter: blur(2px);
+    background-image: radial-gradient(circle, currentColor 0%, transparent 70%);
     animation: pulse 2.6s ease-in-out infinite alternate;
   }
 
@@ -385,9 +389,9 @@
       <div class="rock" style="left:0; bottom:0; width:40%; height:22%;"></div>
       <div class="waterfall" style="left:20%; width:12%;"></div>
       <div class="pool"></div>
-      <div class="glow-plant" style="left:52%; bottom:10%; background:var(--dust);"></div>
-      <div class="glow-plant" style="left:60%; bottom:16%; background:var(--peach); animation-delay:1s;"></div>
-      <div class="glow-plant" style="left:70%; bottom:8%; background:var(--violet); animation-delay:0.5s;"></div>
+      <div class="glow-plant" style="left:52%; bottom:10%; color:var(--dust);"></div>
+      <div class="glow-plant" style="left:60%; bottom:16%; color:var(--peach); animation-delay:1s;"></div>
+      <div class="glow-plant" style="left:70%; bottom:8%; color:var(--violet); animation-delay:0.5s;"></div>
     </div>
     <div class="deer">
       <svg width="140" height="90" viewBox="0 0 140 90">
@@ -417,7 +421,7 @@
 <script>
   // Foreground grass: procedurally generate blades so each scene gets its own staggered sway
   document.querySelectorAll('.grass').forEach(g => {
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 26; i++) {
       const b = document.createElement('div');
       b.className = 'blade';
       const h = 20 + Math.random() * 50;
@@ -431,9 +435,11 @@
 
   const scenes = [document.getElementById('scene-0'), document.getElementById('scene-1'), document.getElementById('scene-2')];
   let current = 0;
+  let previous = 0;
   let zTop = 1;
 
   setInterval(() => {
+    previous = current;
     current = (current + 1) % scenes.length;
     zTop++;
     const el = scenes[current];
@@ -442,6 +448,9 @@
     el.classList.remove('active');
     void el.offsetWidth; // force reflow so the clip-path transition replays from the clipped state
     el.classList.add('active');
+    // only the current scene and the one still peeking out mid-wipe need to keep animating;
+    // anything further back is fully covered, so pause its idle animations to cut wasted repaint work
+    scenes.forEach((s, i) => s.classList.toggle('dormant', i !== current && i !== previous));
   }, 3300);
 </script>
 </body>
