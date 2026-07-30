@@ -1,0 +1,14 @@
+[
+  {
+    "id": "aurora-gradient-hero",
+    "title": "Aurora gradient hero",
+    "source_url": "https://example.com",
+    "media": null,
+    "media_type": "image",
+    "tags": ["dark-mode", "gradient-mesh", "scroll-animation"],
+    "colors": ["#050505", "#7c5cff", "#00e0c6"],
+    "notes": "Sample entry — shows the schema. Delete once you have real designs.",
+    "recreation_prompt": "Build a full-viewport hero section with a near-black (#050505) background and an animated aurora-style gradient mesh (blurred, softly moving blobs of #7c5cff and #00e0c6 at ~40% opacity, generated with layered radial-gradient divs or an SVG filter, animated via CSS keyframes drifting position over 20s+ ease-in-out loops). Centered headline in a large bold sans-serif, subheading below in a muted gray, and a single pill-shaped CTA button with a subtle glow on hover. On scroll, fade and slightly translate the hero content upward using an IntersectionObserver-driven class toggle (opacity 1→0, translateY 0→-20px), so it feels like the hero dissolves as you scroll past it.",
+    "date_added": "2026-07-30"
+  }
+]

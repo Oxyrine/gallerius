@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+static/assets/*.mp4
+static/assets/*.mov
+static/assets/*.webm
+static/assets/*.png
+static/assets/*.jpg
+static/assets/*.jpeg
+static/assets/*.gif
+static/assets/*.webp
+!static/assets/.gitkeep
