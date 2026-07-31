@@ -1,0 +1,480 @@
+/* =========================================================================
+   IOCO — design tokens
+   ========================================================================= */
+:root {
+  --bg-deep: #22123f;   /* deep purple/violet base */
+  --accent: #ff2a5f;    /* neon pink/red — accents, hovers, the transition mask */
+  --white: #ffffff;
+  --border-soft: rgba(255, 255, 255, 0.18);
+  --font-main: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  /* The whole experience is exactly one viewport — screens are absolutely
+     positioned on top of each other, so the page itself never scrolls. */
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--white);
+  font-family: var(--font-main);
+}
+
+img { max-width: 100%; display: block; }
+ul { margin: 0; padding: 0; list-style: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* =========================================================================
+   SCREEN STACK
+   Every .screen sits at inset:0 with a fixed 100vw/100vh footprint, so all
+   three occupy literally the same box — display:none/flex is what actually
+   controls which one is visible (GSAP never touches this; it only touches
+   the mask that covers the swap).
+   ========================================================================= */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  flex-direction: column;
+}
+
+.screen.active { display: flex; }
+
+/* =========================================================================
+   SCREEN 1 — HERO
+   ========================================================================= */
+.navbar {
+  /* Sticky is the spec'd technique; since a .screen never scrolls internally
+     it behaves like a normal flex item pinned to the top of the column, but
+     it keeps this ready for a scrollable variant later. */
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 56px;
+  background: transparent;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+
+.hamburger {
+  width: 32px;
+  height: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  /* Flex column of three bars, evenly spaced by justify-content — no manual
+     margin math needed. */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--white);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Clicking the hamburger morphs the three bars into an X (decorative — no
+   menu panel is specified, so this is the button's entire behaviour). */
+.hamburger.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+.hero-content {
+  /* Fills the space between navbar and footer; row on desktop so the
+     headline sits left and the visual sits right, per the brief. */
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 0 56px;
+}
+
+.hero-text { flex: 1; max-width: 640px; }
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  color: var(--accent);
+  margin: 0 0 20px;
+}
+
+.hero-headline {
+  font-size: clamp(40px, 6.5vw, 96px);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+
+.hero-sub {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 440px;
+  margin: 0 0 36px;
+}
+
+.hero-visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-visual {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 50%;
+  box-shadow: 0 0 120px 20px rgba(255, 42, 95, 0.35);
+  /* Infinite up/down float — pure CSS, no JS needed for an idle loop. */
+  animation: float 6s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  from { transform: translateY(-18px); }
+  to   { transform: translateY(18px); }
+}
+
+.screen-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 56px 40px;
+}
+
+.footer-index,
+.sidebar-index {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  background: transparent;
+  color: var(--white);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.nav-arrow:hover { background: var(--accent); border-color: var(--accent); }
+
+.nav-arrow[data-nav-disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* =========================================================================
+   THE SLIDE-IN SWEEP BUTTON
+   A pink block sits behind the label at translateX(-100%) (fully hidden to
+   the left) and slides to translateX(0) on hover. overflow:hidden on the
+   button clips it so it only ever reveals *inside* the button's own border.
+   ========================================================================= */
+.btn-sweep {
+  position: relative;
+  overflow: hidden;
+  padding: 16px 40px;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.btn-sweep::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-100%);
+  transition: transform 0.35s ease;
+  z-index: 0;
+}
+
+.btn-sweep:hover::before { transform: translateX(0); }
+
+.btn-sweep span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-sweep--sm {
+  padding: 10px 22px;
+  font-size: 11px;
+}
+
+/* =========================================================================
+   SCREEN 2 — VERTICAL ACCORDION CAROUSEL
+   ========================================================================= */
+.accordion-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.carousel-sidebar {
+  width: 100px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 0;
+  border-right: 1px solid var(--border-soft);
+}
+
+.accordion {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.accordion-panel {
+  /* Four panels share the row equally... */
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1b0e33;
+  border-right: 1px solid var(--border-soft);
+  /* ...and this transition is what makes that share smoothly animate when
+     `flex` changes on hover, instead of jumping. */
+  transition: flex 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.accordion-panel:last-child { border-right: none; }
+
+/* Background photo, faded in on hover via its own layer so the darkening
+   gradient above it can stay constant for text legibility. */
+.accordion-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--panel-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+
+.accordion-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(34,18,63,0.2) 0%, rgba(15,8,28,0.9) 100%);
+  z-index: 1;
+}
+
+.accordion-panel:hover {
+  flex: 2.5;
+}
+
+.accordion-panel:hover::before {
+  opacity: 0.55;
+}
+
+.panel-index,
+.panel-title,
+.panel-hidden {
+  position: relative;
+  z-index: 2;
+}
+
+.panel-index {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Bullets + CTA start pushed down and invisible, then slide up into place
+   on hover — translateY + opacity is compositor-cheap, so this stays smooth
+   even while the panel's own `flex` is also animating. */
+.panel-hidden {
+  margin-top: 20px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+}
+
+.accordion-panel:hover .panel-hidden {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel-bullets {
+  margin-bottom: 20px;
+}
+
+.panel-bullets li {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 6px 0;
+  border-top: 1px solid var(--border-soft);
+}
+
+/* =========================================================================
+   SCREEN 3 — PRE-ORDER LANDING
+   ========================================================================= */
+[data-screen="3"] {
+  align-items: center;
+  justify-content: center;
+  position: relative; /* anchors the absolutely-positioned back button */
+}
+
+.back-btn {
+  position: absolute;
+  top: 40px;
+  left: 56px;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.preorder-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.concentric-wrap {
+  position: relative;
+  width: 460px;
+  height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+}
+
+.ring-1 { width: 60%; height: 60%; opacity: 0.5; }
+.ring-2 { width: 80%; height: 80%; opacity: 0.28; }
+.ring-3 { width: 100%; height: 100%; opacity: 0.14; }
+
+.organism-visual {
+  position: relative;
+  width: 45%;
+  border-radius: 50%;
+  box-shadow: 0 0 90px 24px rgba(255, 42, 95, 0.45);
+  z-index: 1;
+}
+
+.preorder-subtitle {
+  margin: 40px 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.preorder-logo {
+  font-size: clamp(64px, 11vw, 160px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 0 0 40px;
+}
+
+/* =========================================================================
+   GSAP SWEEP TRANSITION MASK
+   Starts at top:100vh (fully below the viewport) per the brief — this is a
+   `top` value, never a transform, so GSAP's own `top` tweens don't conflict
+   with a resting transform. z-index sits above every screen.
+   ========================================================================= */
+.transition-mask {
+  position: fixed;
+  top: 100vh;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--accent);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mask-logo {
+  opacity: 0;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: var(--white);
+}
+
+.mask-logo span {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* =========================================================================
+   RESPONSIVE — collapse to a single column below tablet width
+   ========================================================================= */
+@media (max-width: 900px) {
+  .hero-content { flex-direction: column; justify-content: center; gap: 24px; text-align: center; }
+  .hero-text { max-width: 100%; }
+  .hero-sub { margin-left: auto; margin-right: auto; }
+  .hero-visual { order: -1; }
+  .floating-visual { max-width: 260px; }
+
+  .accordion-layout { flex-direction: column; }
+  .carousel-sidebar { width: 100%; flex-direction: row; padding: 16px 24px; border-right: none; border-bottom: 1px solid var(--border-soft); }
+  .accordion { flex-direction: column; }
+  .accordion-panel:hover { flex: 2.5; }
+  .panel-title { white-space: normal; }
+
+  .concentric-wrap { width: 320px; height: 320px; }
+}

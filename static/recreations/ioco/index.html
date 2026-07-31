@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IOCO — The First True Biocomputer</title>
+
+<!-- Geometric sans-serif with a full weight range for the huge display headlines and the
+     wide-tracked eyebrow/subtitle text -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ======================================================================
+       SCREEN 1 — HERO
+       The three screens are siblings, each position:absolute + 100vw/100vh
+       (see .screen in style.css) so they stack exactly on top of one another.
+       Only the one carrying .active is displayed; script.js swaps that class
+       while the pink transition mask is fully covering the viewport.
+  ======================================================================= -->
+  <section class="screen active" data-screen="1">
+
+    <nav class="navbar">
+      <div class="logo">IOCO</div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <p class="eyebrow">BIOCOMPUTER SERIES — 01</p>
+        <h1 class="hero-headline">THE FIRST<br>TRUE<br>BIOCOMPUTER.</h1>
+        <p class="hero-sub">Organic intelligence, grown rather than manufactured. IOCO fuses
+          living tissue with silicon substrate to compute past the limits of quantum.</p>
+        <button class="btn-sweep">
+          <span>LEARN MORE</span>
+        </button>
+      </div>
+
+      <div class="hero-visual">
+        <!-- The float animation is pure CSS (see .floating-visual) -->
+        <img class="floating-visual"
+             src="https://images.unsplash.com/photo-1670189577367-2c6ef31a4b8c?q=80&w=1200&auto=format&fit=crop"
+             alt="Abstract glowing organic 3D shape">
+      </div>
+    </div>
+
+    <footer class="screen-footer">
+      <button class="nav-arrow" data-nav-disabled aria-label="Previous">&larr;</button>
+      <div class="footer-index" data-footer-index>01 / 03</div>
+      <button class="nav-arrow" data-goto="2" aria-label="Next screen">&rarr;</button>
+    </footer>
+
+  </section>
+
+  <!-- ======================================================================
+       SCREEN 2 — VERTICAL ACCORDION CAROUSEL
+  ======================================================================= -->
+  <section class="screen" data-screen="2">
+
+    <div class="accordion-layout">
+
+      <aside class="carousel-sidebar">
+        <button class="nav-arrow" data-goto="1" aria-label="Previous screen">&uarr;</button>
+        <div class="sidebar-index" data-footer-index>02 / 03</div>
+        <button class="nav-arrow" data-goto="3" aria-label="Next screen">&darr;</button>
+      </aside>
+
+      <!-- Four flex children sharing width equally (flex:1 each). On hover a panel
+           grows to flex:2.5 — see .accordion-panel / :hover in style.css -->
+      <div class="accordion">
+
+        <div class="accordion-panel" style="--panel-image: url('https://images.unsplash.com/photo-1557264322-b44d383a2906?q=80&w=1200&auto=format&fit=crop');">
+          <div class="panel-index">01</div>
+          <h3 class="panel-title">NEURAL<br>SUBSTRATE</h3>
+          <div class="panel-hidden">
+            <ul class="panel-bullets">
+              <li>Grown, not fabricated</li>
+              <li>Self-healing lattice</li>
+              <li>Zero thermal loss</li>
+            </ul>
+            <button class="btn-sweep btn-sweep--sm"><span>EXPLORE</span></button>
+          </div>
+        </div>
+
+        <div class="accordion-panel" style="--panel-image: url('https://images.unsplash.com/photo-1656536665219-da2b7deb314b?q=80&w=1200&auto=format&fit=crop');">
+          <div class="panel-index">02</div>
+          <h3 class="panel-title">SYNAPTIC<br>CORE</h3>
+          <div class="panel-hidden">
+            <ul class="panel-bullets">
+              <li>140 trillion junctions</li>
+              <li>Adaptive routing</li>
+              <li>Sub-millisecond recall</li>
+            </ul>
+            <button class="btn-sweep btn-sweep--sm"><span>EXPLORE</span></button>
+          </div>
+        </div>
+
+        <div class="accordion-panel" style="--panel-image: url('https://images.unsplash.com/photo-1552957091-7d7113198882?q=80&w=1200&auto=format&fit=crop');">
+          <div class="panel-index">03</div>
+          <h3 class="panel-title">BIO<br>MEMORY</h3>
+          <div class="panel-hidden">
+            <ul class="panel-bullets">
+              <li>DNA-encoded storage</li>
+              <li>Exabyte density</li>
+              <li>Centuries of retention</li>
+            </ul>
+            <button class="btn-sweep btn-sweep--sm"><span>EXPLORE</span></button>
+          </div>
+        </div>
+
+        <div class="accordion-panel" style="--panel-image: url('https://images.unsplash.com/photo-1698510352419-0d1eb48ff224?q=80&w=1200&auto=format&fit=crop');">
+          <div class="panel-index">04</div>
+          <h3 class="panel-title">LIVING<br>CLOUD</h3>
+          <div class="panel-hidden">
+            <ul class="panel-bullets">
+              <li>Self-replicating nodes</li>
+              <li>Carbon-negative compute</li>
+              <li>Global mesh sync</li>
+            </ul>
+            <button class="btn-sweep btn-sweep--sm"><span>EXPLORE</span></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ======================================================================
+       SCREEN 3 — PRE-ORDER LANDING
+  ======================================================================= -->
+  <section class="screen" data-screen="3">
+
+    <button class="back-btn" data-goto="2">&larr; BACK</button>
+
+    <div class="preorder-center">
+      <div class="concentric-wrap">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <img class="organism-visual floating-visual"
+             src="https://images.unsplash.com/photo-1594814532732-37c265b0dd3c?q=80&w=1000&auto=format&fit=crop"
+             alt="Glowing translucent organism suspended in a dark void">
+      </div>
+
+      <p class="preorder-subtitle">B E T T E R &nbsp; T H A N &nbsp; Q U A N T U M</p>
+      <h2 class="preorder-logo">IOCO</h2>
+
+      <button class="btn-sweep">
+        <span>PRE-ORDER NOW</span>
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ======================================================================
+       GSAP SWEEP TRANSITION MASK
+       Starts parked at top:100vh (fully below the viewport). script.js drives
+       `top` (never `transform`) up to 0vh to cover the screen, swaps the
+       .active screen while fully covered, then sweeps on up to -100vh.
+  ======================================================================= -->
+  <div class="transition-mask" id="transitionMask">
+    <div class="mask-logo" id="maskLogo">IOCO <span>BIOCOMPUTER</span></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
