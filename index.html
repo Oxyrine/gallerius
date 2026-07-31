@@ -281,11 +281,10 @@
 
   dialog { position: relative; }
 
-  /* ---------- Hero: real screenshots pulled from the source Notosan video,
-     cycled with the same wipe transition. Each .scene is just the actual
-     frame as a full-bleed background image — the frame already contains its
-     own heading/copy/CTA baked in, so there's no separate text overlay to
-     keep in sync or get wrong. ---------- */
+  /* ---------- Hero: the actual source video, playing directly.
+     It already contains the real art, the real motion (waterfall flow,
+     birds, grass sway), and the real scene transitions at the real timing —
+     reconstructing that from static frames only threw all of it away. ---------- */
   #dv-hero {
     position: relative;
     width: 100%;
@@ -294,51 +293,19 @@
     background: #0a0e2e;
   }
 
-  #dv-hero .scene {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    clip-path: inset(100% 0 0 0);
-    will-change: opacity, clip-path;
-    background-size: cover;
-    background-position: center;
+  #dv-hero video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 </style>
 </head>
 <body>
 
 <section id="dv-hero">
-  <section class="scene" id="dv-scene-0" style="background-image:url('/static/assets/notosan-scene-visite.jpg')"></section>
-  <section class="scene" id="dv-scene-1" style="background-image:url('/static/assets/notosan-scene-tranquility.jpg')"></section>
-  <section class="scene" id="dv-scene-2" style="background-image:url('/static/assets/notosan-scene-biodiversity.jpg')"></section>
+  <video autoplay muted loop playsinline src="/static/assets/notosan-nature-scene-carousel.mp4"></video>
 </section>
-
-<script>
-(function () {
-  const scenes = [document.getElementById('dv-scene-0'), document.getElementById('dv-scene-1'), document.getElementById('dv-scene-2')];
-  let current = 0;
-  let zTop = 1;
-
-  function wipeIn(el) {
-    zTop++;
-    el.style.zIndex = zTop;
-    el.animate(
-      [
-        { clipPath: 'inset(100% 0 0 0)', opacity: 0 },
-        { clipPath: 'inset(0% 0 0 0)', opacity: 1 }
-      ],
-      { duration: 550, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
-    );
-  }
-
-  wipeIn(scenes[current]);
-
-  setInterval(() => {
-    current = (current + 1) % scenes.length;
-    wipeIn(scenes[current]);
-  }, 3300);
-})();
-</script>
 
 <header>
   <h1>Design<span>Vault</span></h1>
