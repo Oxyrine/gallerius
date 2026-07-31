@@ -69,8 +69,10 @@
   #tagbar {
     display: flex;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     flex: 1;
+    min-width: 0;
   }
 
   .chip {
@@ -121,6 +123,8 @@
 
   .thumb {
     width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
     display: block;
     background: #000;
   }
@@ -558,8 +562,7 @@ function renderGrid() {
     } else {
       media = `<div class="thumb thumb-placeholder" style="${placeholderStyle(d.colors)}"></div>`;
     }
-    const tags = (d.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
-    return `<div class="card" data-idx="${idx}">${media}<div class="card-body"><p class="card-title">${d.title}</p><div class="card-tags">${tags}</div></div></div>`;
+    return `<div class="card" data-idx="${idx}">${media}<div class="card-body"><p class="card-title">${d.title}</p></div></div>`;
   }).join("");
 
   grid.querySelectorAll(".card").forEach(card => {
