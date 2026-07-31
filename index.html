@@ -281,24 +281,17 @@
 
   dialog { position: relative; }
 
-  /* ---------- Hero (Notosan recreation, adapted as the DesignVault banner) ---------- */
+  /* ---------- Hero: real screenshots pulled from the source Notosan video,
+     cycled with the same wipe transition. Each .scene is just the actual
+     frame as a full-bleed background image — the frame already contains its
+     own heading/copy/CTA baked in, so there's no separate text overlay to
+     keep in sync or get wrong. ---------- */
   #dv-hero {
-    --navy-deep: #0a0e2e;
-    --navy: #141a4a;
-    --purple: #4a2f6b;
-    --violet: #8a63d1;
-    --rose: #e0607a;
-    --gold: #ffb347;
-    --amber: #ffd166;
-    --teal: #2de2c2;
-    --coral: #ff6f91;
-    --sand: #d9a066;
     position: relative;
     width: 100%;
     height: 100vh;
     overflow: hidden;
-    background: var(--navy-deep);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #0a0e2e;
   }
 
   #dv-hero .scene {
@@ -307,338 +300,23 @@
     opacity: 0;
     clip-path: inset(100% 0 0 0);
     will-change: opacity, clip-path;
-  }
-
-  #dv-hero .scene.dormant * { animation-play-state: paused !important; }
-
-  #dv-hero .scene-bg {
-    position: absolute;
-    inset: -2%;
-    animation: dv-drift 22s ease-in-out infinite alternate;
-  }
-
-  @keyframes dv-drift {
-    from { transform: translateY(0px); }
-    to   { transform: translateY(4px); }
-  }
-
-  #dv-hero .scene-content {
-    position: absolute;
-    left: 64px;
-    bottom: 18%;
-    max-width: 460px;
-    color: #fff;
-    z-index: 5;
-  }
-
-  #dv-hero .kicker {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 14px;
-  }
-
-  #dv-hero .heading {
-    font-size: clamp(48px, 7vw, 88px);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 0 0 18px;
-    line-height: 1;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.35);
-  }
-
-  #dv-hero .copy {
-    font-size: 14px;
-    line-height: 1.7;
-    color: rgba(255,255,255,0.68);
-    max-width: 420px;
-    margin: 0 0 26px;
-  }
-
-  #dv-hero .cta-filled {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #fff;
-    color: #14122a;
-    border-radius: 999px;
-    padding: 13px 22px;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  #dv-hero .cta-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    font-size: 13px;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.5);
-    padding-bottom: 4px;
-  }
-
-  #dv-hero .grass {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 14%;
-    z-index: 6;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    overflow: hidden;
-  }
-
-  #dv-hero .blade {
-    width: 6px;
-    background: #05060f;
-    border-radius: 6px 6px 0 0;
-    transform-origin: bottom center;
-    animation: dv-sway 3.5s ease-in-out infinite alternate;
-  }
-
-  @keyframes dv-sway {
-    from { transform: rotate(-3deg); }
-    to   { transform: rotate(3deg); }
-  }
-
-  #dv-hero .bird-layer { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
-
-  #dv-hero .bird {
-    position: absolute;
-    font-size: 13px;
-    color: rgba(20,15,40,0.75);
-    animation: dv-fly linear infinite;
-  }
-
-  @keyframes dv-fly {
-    from { transform: translateX(-10vw); }
-    to   { transform: translateX(110vw); }
-  }
-
-  #dv-hero .character {
-    position: absolute;
-    right: 6%;
-    bottom: 6%;
-    z-index: 5;
-  }
-
-  #dv-hero .bg-1 {
-    background:
-      radial-gradient(ellipse 55% 42% at 68% 40%, rgba(255,179,71,0.85), rgba(255,179,71,0) 72%),
-      linear-gradient(180deg, var(--purple) 0%, var(--rose) 50%, var(--amber) 100%);
-  }
-
-  #dv-hero .mountain-1 {
-    position: absolute;
-    left: 20%;
-    bottom: 20%;
-    width: 55%;
-    height: 45%;
-    background: linear-gradient(180deg, #fff2c9 0%, var(--gold) 32%, var(--rose) 62%, var(--purple) 100%);
-    clip-path: polygon(50% 0%, 78% 45%, 100% 100%, 0% 100%, 22% 45%);
-  }
-
-  #dv-hero .lake-1 {
-    position: absolute;
-    left: 0; right: 0; bottom: 14%;
-    height: 8%;
-    background: linear-gradient(180deg, var(--violet), var(--navy));
-    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-    opacity: 0.75;
-  }
-
-  #dv-hero .bg-water {
-    background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
-  }
-
-  #dv-hero .rays {
-    position: absolute;
-    left: 10%;
-    top: -10%;
-    width: 60%;
-    height: 90%;
-    background: repeating-linear-gradient(
-      100deg,
-      rgba(255,209,102,0.18) 0px,
-      rgba(255,209,102,0.18) 14px,
-      transparent 14px,
-      transparent 60px
-    );
-  }
-
-  #dv-hero .rock {
-    position: absolute;
-    background: linear-gradient(160deg, #3d2f6b, #140f2c);
-    border-radius: 40% 60% 50% 50% / 60% 50% 50% 40%;
-  }
-
-  #dv-hero .waterfall {
-    position: absolute;
-    left: 16%;
-    top: 8%;
-    width: 14%;
-    height: 78%;
-    background: linear-gradient(180deg, rgba(235,246,255,0.95), rgba(120,199,232,0.6));
-    border-radius: 0 0 40% 40%;
-    background-size: 100% 200%;
-    animation: dv-fall 1.4s linear infinite;
-  }
-
-  @keyframes dv-fall {
-    from { background-position: 0 0; }
-    to   { background-position: 0 60px; }
-  }
-
-  #dv-hero .pool {
-    position: absolute;
-    left: 8%;
-    bottom: 4%;
-    width: 34%;
-    height: 10%;
-    background: radial-gradient(ellipse at center, rgba(120,199,232,0.6), rgba(20,20,50,0) 70%);
-  }
-
-  #dv-hero .glow-plant {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-image: radial-gradient(circle, currentColor 0%, transparent 70%);
-    animation: dv-pulse 2.6s ease-in-out infinite alternate;
-  }
-
-  @keyframes dv-pulse {
-    from { opacity: 0.5; }
-    to   { opacity: 1; }
-  }
-
-  #dv-hero .deer {
-    position: absolute;
-    right: 22%;
-    bottom: 8%;
-    z-index: 5;
+    background-size: cover;
+    background-position: center;
   }
 </style>
 </head>
 <body>
 
 <section id="dv-hero">
-  <section class="scene" id="dv-scene-0">
-    <div class="scene-bg bg-1">
-      <div class="mountain-1"></div>
-      <div class="lake-1"></div>
-    </div>
-    <div class="bird-layer">
-      <span class="bird" style="top:18%; animation-duration:14s;">⌃</span>
-      <span class="bird" style="top:22%; animation-duration:18s; animation-delay:2s;">⌃</span>
-      <span class="bird" style="top:16%; animation-duration:16s; animation-delay:5s;">⌃</span>
-    </div>
-    <div class="character">
-      <svg width="120" height="180" viewBox="0 0 120 180">
-        <line x1="30" y1="70" x2="20" y2="170" stroke="#3a2a1a" stroke-width="4"/>
-        <path d="M40 90 Q60 60 90 90 L95 170 L35 170 Z" fill="#8a4a3a"/>
-        <path d="M40 90 Q60 60 90 90 L88 130 L45 130 Z" fill="#c96b3f" opacity="0.85"/>
-        <circle cx="63" cy="70" r="14" fill="#e8b98f"/>
-        <ellipse cx="63" cy="52" rx="34" ry="10" fill="#d9a441"/>
-        <path d="M40 52 Q63 30 86 52 Z" fill="#e8bc63"/>
-      </svg>
-    </div>
-    <div class="grass"></div>
-    <div class="scene-content">
-      <div class="kicker">05 Experience</div>
-      <h1 class="heading">VISITE</h1>
-      <p class="copy">Journey to new frontiers, journey to Noto Nature Park. Away from the manic energy of Japan's famous metropolis lies the ancient hamlet of Noto — soaring peaks, lakes and endless waterfalls.</p>
-      <a class="cta-filled" href="#">Start the journey <span>→</span></a>
-    </div>
-  </section>
-
-  <section class="scene" id="dv-scene-1">
-    <div class="scene-bg bg-water">
-      <div class="rays"></div>
-      <div class="rock" style="left:2%; top:0; width:26%; height:100%;"></div>
-      <div class="rock" style="left:0; bottom:0; width:40%; height:22%;"></div>
-      <div class="waterfall"></div>
-      <div class="pool"></div>
-    </div>
-    <div class="bird-layer">
-      <span class="bird" style="top:70%; animation-duration:10s;">⌄</span>
-      <span class="bird" style="top:74%; animation-duration:13s; animation-delay:3s;">⌄</span>
-    </div>
-    <div class="character" style="right:14%; bottom:8%;">
-      <svg width="110" height="120" viewBox="0 0 110 120">
-        <path d="M55 40 L95 60" stroke="#3a2a1a" stroke-width="3"/>
-        <path d="M30 65 Q55 45 80 65 L85 115 L25 115 Z" fill="#8a4a3a"/>
-        <path d="M30 65 Q55 45 80 65 L78 95 L35 95 Z" fill="#c96b3f" opacity="0.85"/>
-        <circle cx="55" cy="48" r="12" fill="#e8b98f"/>
-        <ellipse cx="55" cy="34" rx="28" ry="8" fill="#d9a441"/>
-        <path d="M35 34 Q55 16 75 34 Z" fill="#e8bc63"/>
-      </svg>
-    </div>
-    <div class="grass"></div>
-    <div class="scene-content">
-      <div class="kicker">06 Experience</div>
-      <h1 class="heading">Tranquility</h1>
-      <p class="copy">Soaring peaks, lakes and endless waterfalls combine to form a habitat for a biodiverse range of species — the ancient hamlet of Noto, surprising and captivating in equal measure.</p>
-      <a class="cta-link" href="#">— Learn more</a>
-    </div>
-  </section>
-
-  <section class="scene" id="dv-scene-2">
-    <div class="scene-bg bg-water">
-      <div class="rays"></div>
-      <div class="rock" style="left:2%; top:0; width:26%; height:100%;"></div>
-      <div class="rock" style="left:0; bottom:0; width:40%; height:22%;"></div>
-      <div class="waterfall" style="left:20%; width:12%;"></div>
-      <div class="pool"></div>
-      <div class="glow-plant" style="left:52%; bottom:10%; color:var(--teal);"></div>
-      <div class="glow-plant" style="left:60%; bottom:16%; color:var(--coral); animation-delay:1s;"></div>
-      <div class="glow-plant" style="left:70%; bottom:8%; color:var(--amber); animation-delay:0.5s;"></div>
-    </div>
-    <div class="deer">
-      <svg width="140" height="90" viewBox="0 0 140 90">
-        <ellipse cx="70" cy="55" rx="42" ry="20" fill="var(--sand)"/>
-        <path d="M108 45 L128 20" stroke="var(--sand)" stroke-width="10" stroke-linecap="round"/>
-        <circle cx="130" cy="16" r="12" fill="var(--sand)"/>
-        <rect x="35" y="60" width="8" height="26" fill="#8a5a3a"/>
-        <rect x="55" y="65" width="8" height="21" fill="#8a5a3a"/>
-        <rect x="80" y="65" width="8" height="21" fill="#8a5a3a"/>
-        <rect x="100" y="60" width="8" height="26" fill="#8a5a3a"/>
-        <circle cx="55" cy="45" r="3" fill="#fff" opacity="0.85"/>
-        <circle cx="75" cy="50" r="3" fill="#fff" opacity="0.85"/>
-        <circle cx="65" cy="60" r="3" fill="#fff" opacity="0.85"/>
-      </svg>
-    </div>
-    <div class="grass"></div>
-    <div class="scene-content">
-      <div class="kicker">07 Habitat</div>
-      <h1 class="heading">Biodiversity</h1>
-      <p class="copy">Away from the manic energy of Japan's famous metropolis lies the ancient hamlet of Noto — surprising and captivating in equal measure, home to a rare and thriving range of species.</p>
-      <a class="cta-link" href="#">— Learn more</a>
-    </div>
-  </section>
+  <section class="scene" id="dv-scene-0" style="background-image:url('/static/assets/notosan-scene-visite.jpg')"></section>
+  <section class="scene" id="dv-scene-1" style="background-image:url('/static/assets/notosan-scene-tranquility.jpg')"></section>
+  <section class="scene" id="dv-scene-2" style="background-image:url('/static/assets/notosan-scene-biodiversity.jpg')"></section>
 </section>
 
 <script>
 (function () {
-  document.querySelectorAll('#dv-hero .grass').forEach(g => {
-    for (let i = 0; i < 26; i++) {
-      const b = document.createElement('div');
-      b.className = 'blade';
-      const h = 20 + Math.random() * 50;
-      b.style.height = h + 'px';
-      b.style.marginLeft = (Math.random() * 4) + 'px';
-      b.style.animationDelay = (Math.random() * 3) + 's';
-      b.style.animationDuration = (2.5 + Math.random() * 2) + 's';
-      g.appendChild(b);
-    }
-  });
-
   const scenes = [document.getElementById('dv-scene-0'), document.getElementById('dv-scene-1'), document.getElementById('dv-scene-2')];
   let current = 0;
-  let previous = -1;
   let zTop = 1;
 
   function wipeIn(el) {
@@ -656,10 +334,8 @@
   wipeIn(scenes[current]);
 
   setInterval(() => {
-    previous = current;
     current = (current + 1) % scenes.length;
     wipeIn(scenes[current]);
-    scenes.forEach((s, i) => s.classList.toggle('dormant', i !== current && i !== previous));
   }, 3300);
 })();
 </script>
