@@ -1,6 +1,9 @@
 __pycache__/
 *.pyc
 
+node_modules/
+dist/
+
 static/assets/*.mp4
 static/assets/*.mov
 static/assets/*.webm

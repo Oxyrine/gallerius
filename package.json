@@ -1,0 +1,13 @@
+{
+  "name": "designvault-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Electron shell that runs DesignVault as a desktop app, pointed at this live project folder",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^36.4.0"
+  }
+}
