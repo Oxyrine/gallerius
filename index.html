@@ -281,31 +281,225 @@
 
   dialog { position: relative; }
 
-  /* ---------- Hero: the actual source video, playing directly.
-     It already contains the real art, the real motion (waterfall flow,
-     birds, grass sway), and the real scene transitions at the real timing —
-     reconstructing that from static frames only threw all of it away. ---------- */
+  /* ---------- Hero: a scroll-driven intro to DesignVault itself, using the
+     Notosan video as backdrop art. #dv-hero is 300vh tall (one screen per
+     chapter); .hero-sticky pins itself to the viewport for that whole
+     scroll distance via position:sticky, so the video stays put while the
+     page scrolls "through" it. JS below maps scroll progress inside that
+     300vh to which chapter is active, and jumps the video to that chapter's
+     backdrop frame — not continuous scrubbing, since the source video only
+     looks clean at specific settled timestamps (the rest is mid-transition
+     motion blur). ---------- */
   #dv-hero {
     position: relative;
-    width: 100%;
+    height: 300vh;
+  }
+
+  .hero-sticky {
+    position: sticky;
+    top: 0;
     height: 100vh;
     overflow: hidden;
     background: #0a0e2e;
   }
 
-  #dv-hero video {
+  .hero-sticky video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  /* Scrim over the video so white text stays readable regardless of which
+     chapter's frame is showing underneath. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(8,8,10,0.15) 0%, rgba(8,8,10,0.75) 100%);
+    pointer-events: none;
+  }
+
+  .hero-chapter {
+    position: absolute;
+    left: 64px;
+    bottom: 16%;
+    max-width: 480px;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+  }
+
+  .hero-chapter.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .hero-kicker {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 14px;
+  }
+
+  .hero-heading {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 18px;
+    line-height: 1.05;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.5);
+  }
+
+  .hero-copy {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.8);
+    margin: 0 0 24px;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.6);
+    padding-bottom: 4px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    cursor: pointer;
+  }
+
+  /* Small progress dashes on the right edge, one per chapter, so scrolling
+     visibly "does" something even before the text finishes fading in. */
+  .hero-progress {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero-progress span {
+    width: 6px;
+    height: 24px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.25);
+    transition: background 0.3s ease;
+  }
+
+  .hero-progress span.active { background: var(--accent-2); }
+
+  .hero-scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.7);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    transition: opacity 0.3s ease;
+    animation: dv-hint-nudge 1.8s ease-in-out infinite;
+  }
+
+  .hero-scroll-hint.hidden { opacity: 0; }
+
+  @keyframes dv-hint-nudge {
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 8px); }
   }
 </style>
 </head>
 <body>
 
 <section id="dv-hero">
-  <video autoplay muted loop playsinline src="/static/assets/notosan-nature-scene-carousel.mp4"></video>
+  <div class="hero-sticky">
+    <video muted playsinline src="/static/assets/notosan-nature-scene-carousel.mp4"></video>
+    <div class="hero-scrim"></div>
+
+    <div class="hero-chapter active" data-chapter="0">
+      <div class="hero-kicker">Your personal swipe file</div>
+      <h1 class="hero-heading">DesignVault</h1>
+      <p class="hero-copy">Every great design you stumble across is gone in a scroll. DesignVault keeps it — drop in a video, an image, or a link, and it's saved for good.</p>
+    </div>
+
+    <div class="hero-chapter" data-chapter="1">
+      <div class="hero-kicker">AI-written recreation prompts</div>
+      <h1 class="hero-heading">Rebuild it exactly</h1>
+      <p class="hero-copy">Every entry comes with a detailed master prompt — colors, layout, motion, all of it — so when you're ready to build it yourself, you get the exact result.</p>
+    </div>
+
+    <div class="hero-chapter" data-chapter="2">
+      <div class="hero-kicker">Your collection, organized</div>
+      <h1 class="hero-heading">Browse the vault</h1>
+      <p class="hero-copy">Search by title or tag, filter your collection, and open any entry for its full recreation prompt and palette.</p>
+      <button class="hero-cta" id="hero-cta">Explore the vault ↓</button>
+    </div>
+
+    <div class="hero-progress">
+      <span class="active"></span><span></span><span></span>
+    </div>
+
+    <div class="hero-scroll-hint">Scroll</div>
+  </div>
 </section>
+
+<script>
+(function () {
+  const hero = document.getElementById('dv-hero');
+  const video = hero.querySelector('video');
+  const chapters = [...hero.querySelectorAll('.hero-chapter')];
+  const progressDots = [...hero.querySelectorAll('.hero-progress span')];
+  const scrollHint = hero.querySelector('.hero-scroll-hint');
+
+  // Clean, settled timestamps in the source video for each chapter's backdrop
+  // (picked by hand — the moments in between are mid-transition motion blur).
+  const CHAPTER_TIMES = [0.3, 2.2, 6.5];
+
+  let duration = 0;
+  let currentChapter = 0;
+
+  video.addEventListener('loadedmetadata', () => {
+    duration = video.duration;
+    video.currentTime = CHAPTER_TIMES[0];
+  });
+
+  function update() {
+    const scrollable = hero.offsetHeight - window.innerHeight;
+    const scrolled = -hero.getBoundingClientRect().top;
+    const fraction = Math.min(1, Math.max(0, scrolled / scrollable));
+
+    const chapterIndex = Math.min(chapters.length - 1, Math.floor(fraction * chapters.length));
+    if (chapterIndex !== currentChapter) {
+      currentChapter = chapterIndex;
+      chapters.forEach((c, i) => c.classList.toggle('active', i === chapterIndex));
+      progressDots.forEach((d, i) => d.classList.toggle('active', i === chapterIndex));
+      if (duration) video.currentTime = CHAPTER_TIMES[chapterIndex];
+    }
+
+    scrollHint.classList.toggle('hidden', fraction > 0.03);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+
+  document.getElementById('hero-cta').addEventListener('click', () => {
+    document.querySelector('header').scrollIntoView({ behavior: 'smooth' });
+  });
+})();
+</script>
 
 <header>
   <h1>Design<span>Vault</span></h1>
