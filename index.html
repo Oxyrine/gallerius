@@ -30,9 +30,10 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    background: rgba(8, 8, 10, 0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(20, 20, 24, 0.45);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding: 20px 32px;
     display: flex;
     align-items: center;
@@ -66,17 +67,25 @@
     border-color: var(--accent);
   }
 
+  .tagbar-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
   #tagbar {
     display: flex;
     gap: 8px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow: hidden;
     flex: 1;
     min-width: 0;
   }
 
   .chip {
-    background: var(--card);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
     color: var(--muted);
     border-radius: 999px;
@@ -84,6 +93,7 @@
     font-size: 12px;
     cursor: pointer;
     white-space: nowrap;
+    flex-shrink: 0;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
 
@@ -94,6 +104,34 @@
     border-color: var(--accent);
     background: rgba(124, 92, 255, 0.15);
   }
+
+  #tag-more-btn {
+    display: none;
+    font-weight: 600;
+  }
+
+  .tag-overflow-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 260px;
+    max-width: 420px;
+    max-height: 280px;
+    overflow-y: auto;
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(30, 30, 34, 0.55);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+  }
+
+  .tag-overflow-panel.open { display: flex; }
 
   main {
     padding: 24px 32px 60px;
@@ -483,7 +521,11 @@
 <header>
   <h1>Design<span>Vault</span></h1>
   <input id="search" type="text" placeholder="Search titles or tags...">
-  <div id="tagbar"></div>
+  <div class="tagbar-wrap">
+    <div id="tagbar"></div>
+    <button id="tag-more-btn" class="chip"></button>
+    <div id="tag-overflow-panel" class="tag-overflow-panel"></div>
+  </div>
 </header>
 
 <main>
@@ -525,20 +567,60 @@ function placeholderStyle(colors) {
   return `background: linear-gradient(135deg, ${stops});`;
 }
 
+const TAGBAR_VISIBLE_COUNT = 6;
+
 function renderTagbar() {
   const allTags = [...new Set(designs.flatMap(d => d.tags || []))].sort();
+  let visible = allTags.slice(0, TAGBAR_VISIBLE_COUNT);
+  let overflow = allTags.slice(TAGBAR_VISIBLE_COUNT);
+
+  // Keep the active filter visible in the main bar even if it'd otherwise be tucked away.
+  if (activeTag && overflow.includes(activeTag)) {
+    const bumped = visible.pop();
+    overflow = overflow.filter(t => t !== activeTag);
+    overflow.unshift(bumped);
+    visible.push(activeTag);
+  }
+
+  const chipHtml = t => `<button class="chip${t === activeTag ? " active" : ""}" data-tag="${t}">${t}</button>`;
+
   const bar = document.getElementById("tagbar");
-  bar.innerHTML = allTags.map(t =>
-    `<button class="chip${t === activeTag ? " active" : ""}" data-tag="${t}">${t}</button>`
-  ).join("");
-  bar.querySelectorAll(".chip").forEach(chip => {
+  bar.innerHTML = visible.map(chipHtml).join("");
+
+  const moreBtn = document.getElementById("tag-more-btn");
+  const panel = document.getElementById("tag-overflow-panel");
+  if (overflow.length) {
+    moreBtn.textContent = `+${overflow.length} more`;
+    moreBtn.style.display = "inline-block";
+    panel.innerHTML = overflow.map(chipHtml).join("");
+  } else {
+    moreBtn.style.display = "none";
+    panel.classList.remove("open");
+    panel.innerHTML = "";
+  }
+
+  [...bar.querySelectorAll(".chip"), ...panel.querySelectorAll(".chip")].forEach(chip => {
     chip.addEventListener("click", () => {
       activeTag = activeTag === chip.dataset.tag ? null : chip.dataset.tag;
+      panel.classList.remove("open");
       renderTagbar();
       renderGrid();
     });
   });
 }
+
+document.getElementById("tag-more-btn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  document.getElementById("tag-overflow-panel").classList.toggle("open");
+});
+
+document.addEventListener("click", (e) => {
+  const panel = document.getElementById("tag-overflow-panel");
+  const btn = document.getElementById("tag-more-btn");
+  if (panel.classList.contains("open") && !panel.contains(e.target) && e.target !== btn) {
+    panel.classList.remove("open");
+  }
+});
 
 function renderGrid() {
   const q = document.getElementById("search").value.trim().toLowerCase();
